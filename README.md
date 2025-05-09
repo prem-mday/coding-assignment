@@ -50,6 +50,25 @@ This application is designed to generate an employee report with detailed analys
 4. Place your employee data CSV file in the correct path as defined in the `EmployeeInfoCSVReaderServiceImpl` class (`EMPLOYEE_INFO_CSV_FILE_PATH`).
 
 ## Sample Output
-
 The application will generate output like the following:
+---
+================================================================================
+---
+SALARY IMPROVEMENT REPORT
+---
+================================================================================
+---
+Manager: Martin Chekov, earns less than he should, and by: 15,000.00.
+---
+Manager: Brett Hardleaf, earns more than he should, and by: 4,000.00.
+---
+================================================================================
+---
+REPORTING LINE REPORT
+---
+================================================================================
+---
+Employee: Sachin Tendulkar, has a reporting line which is too long, and by: 1.
+
+
 
