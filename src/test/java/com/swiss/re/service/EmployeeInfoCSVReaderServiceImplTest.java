@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EmployeeInfoCSVReaderServiceImplTest {
@@ -14,5 +15,12 @@ class EmployeeInfoCSVReaderServiceImplTest {
         EmployeeInfoReaderService empInfoReaderSvc = new EmployeeInfoCSVReaderServiceImpl();
         List<Employee> employees = empInfoReaderSvc.readEmployeeInfo(filePath);
         assertTrue(!employees.isEmpty());
+    }
+
+    @Test
+    void testReadEmployeeInfo_throwException() {
+        String filePath = "./src/test/resources/invalid-employee-info.csv";
+        EmployeeInfoReaderService empInfoReaderSvc = new EmployeeInfoCSVReaderServiceImpl();
+        assertDoesNotThrow(() -> empInfoReaderSvc.readEmployeeInfo(filePath));
     }
 }

@@ -34,6 +34,7 @@ class EmployeeReportGeneratorServiceImplTest {
 
     @Test
     void testGenerateEmployeeInformationReport() {
+        String filePath = "./src/test/resources/employee-info.csv";
         // Setup mock behavior
         List<Employee> mockEmployeeList = new ArrayList<>();
         Employee mockRootEmployee = new Employee();
@@ -49,12 +50,5 @@ class EmployeeReportGeneratorServiceImplTest {
 
         // Execute the method
         assertDoesNotThrow(() -> reportGenerator.generateEmployeeInformationReport());
-
-        // Verify method calls
-        //verify(empInfoReaderSvc).readEmployeeInfo(anyString());
-        //verify(empInfoAnalyzerSvc).createEmployeeHierarchy(mockEmployeeList);
-        //verify(empInfoAnalyzerSvc).creatingDirectSubordinatesAvgSalariesMapping(mockRootEmployee);
-        //verify(empInfoAnalyzerSvc).analyzeSalaries(eq(mockRootEmployee), eq(avgSalaryMap), any());
-        //verify(empInfoAnalyzerSvc).analyzeReportingLine(eq(mockRootEmployee), eq(0), any());
     }
 }

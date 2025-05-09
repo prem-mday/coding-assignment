@@ -1,11 +1,9 @@
 package com.swiss.re.service;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import com.swiss.re.model.Employee;
 
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +40,10 @@ public class EmployeeInfoCSVReaderServiceImpl implements EmployeeInfoReaderServi
                 employeeInfo.setFirstName(row[FIRST_NAME_COL_INDEX]);
                 employeeInfo.setLastName(row[LAST_NAME_COL_INDEX]);
                 employeeInfo.setSalary(parseInt(row[SALARY_COL_INDEX]));
-                employeeInfo.setManagerId((managerIdCol.length() == 0) ? null : parseInt(managerIdCol));
+                employeeInfo.setManagerId((managerIdCol.isEmpty()) ? null : parseInt(managerIdCol));
                 employeesInformation.add(employeeInfo);
             }
-        } catch (IOException | CsvException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
