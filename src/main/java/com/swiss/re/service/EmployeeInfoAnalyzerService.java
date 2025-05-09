@@ -10,7 +10,7 @@ public interface EmployeeInfoAnalyzerService {
 
     Map<Integer, Double> creatingDirectSubordinatesAvgSalariesMapping(Employee ceo);
 
-    void analyzeSalaries(Employee ceo, Map<Integer, Double> subordinatesAvgSalaries);
+    void analyzeSalaries(Employee ceo, Map<Integer, Double> subordinatesAvgSalaries, StringBuilder salaryCorrectionMsg);
 
-    void analyzeReportingLine(Employee ceo, int depth);
+    void analyzeReportingLine(Employee ceo, int depth, StringBuilder reportingLineMsg);
 }

@@ -6,36 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.swiss.re.constant.EmployeeReportConstant.*;
+import static java.lang.System.lineSeparator;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toMap;
 
 public class EmployeeInfoAnalyzerServiceImpl implements EmployeeInfoAnalyzerService {
-
-    @Override
-    public Employee createEmployeeHierarchy(List<Employee> employees) {
-        Employee employeeHierarchy = null;
-        Map<Integer, Employee> employeesMapping = employees.stream().collect(toMap(e -> e.getId(), e -> e));
-        // Updating employees with their subordinates
-        for (Employee employee : employeesMapping.values()) {
-            Integer managerId = employee.getManagerId();
-            if (isNull(managerId)) {
-                employeeHierarchy = employee;
-            } else {
-                employeesMapping.get(managerId).getSubordinates().add(employee);
-            }
-        }
-        System.out.printf("Employee hierarchy created: %s%n", employeeHierarchy);
-
-        return employeeHierarchy;
-    }
-
-    @Override
-    public Map<Integer, Double> creatingDirectSubordinatesAvgSalariesMapping(Employee ceo) {
-        Map<Integer, Double> averageSalariesMapping = new HashMap<>();
-        calculateAverageSalaries(ceo, averageSalariesMapping);
-
-        return averageSalariesMapping;
-    }
 
     // Calculating the average salaries of direct subordinates here
     private static void calculateAverageSalaries(Employee employee, Map<Integer, Double> averageSalaries) {
@@ -50,35 +26,56 @@ public class EmployeeInfoAnalyzerServiceImpl implements EmployeeInfoAnalyzerServ
         }
     }
 
+    @Override
+    public Employee createEmployeeHierarchy(List<Employee> employees) {
+        Employee employeeHierarchy = null;
+        Map<Integer, Employee> employeesMapping = employees.stream().collect(toMap(e -> e.getId(), e -> e));
+        // Updating employees with their subordinates
+        for (Employee employee : employeesMapping.values()) {
+            Integer managerId = employee.getManagerId();
+            if (isNull(managerId)) {
+                employeeHierarchy = employee;
+            } else {
+                employeesMapping.get(managerId).getSubordinates().add(employee);
+            }
+        }
+
+        return employeeHierarchy;
+    }
 
     @Override
-    public void analyzeSalaries(Employee employee, Map<Integer, Double> subordinatesAvgSalaries) {
+    public Map<Integer, Double> creatingDirectSubordinatesAvgSalariesMapping(Employee ceo) {
+        Map<Integer, Double> averageSalariesMapping = new HashMap<>();
+        calculateAverageSalaries(ceo, averageSalariesMapping);
+
+        return averageSalariesMapping;
+    }
+
+    @Override
+    public void analyzeSalaries(Employee employee, Map<Integer, Double> subordinatesAvgSalaries, StringBuilder msg) {
         if (employee.getSubordinates().isEmpty()) {
             return;
         }
         double averageSalary = subordinatesAvgSalaries.get(employee.getId());
         double minSalary = averageSalary * 1.2;
         double maxSalary = averageSalary * 1.5;
-
         if (employee.getSalary() < minSalary) {
-            System.out.println(employee.getFirstName() + " " + employee.getLastName() + " earns less than they should by " + (minSalary - employee.getSalary()));
+            msg.append(SALARY_VARIATION_MSG.formatted(employee.getFirstName(), employee.getLastName(), SALARY_LESS, (minSalary - employee.getSalary()))).append(lineSeparator());
         } else if (employee.getSalary() > maxSalary) {
-            System.out.println(employee.getFirstName() + " " + employee.getLastName() + " earns more than they should by " + (employee.getSalary() - maxSalary));
+            msg.append(SALARY_VARIATION_MSG.formatted(employee.getFirstName(), employee.getLastName(), SALARY_MORE, (employee.getSalary() - maxSalary))).append(lineSeparator());
         }
-
         for (Employee subordinate : employee.getSubordinates()) {
-            analyzeSalaries(subordinate, subordinatesAvgSalaries);
+            analyzeSalaries(subordinate, subordinatesAvgSalaries, msg);
         }
     }
 
     @Override
-    public void analyzeReportingLine(Employee employee, int depth) {
-        if (depth > 4) {
-            System.out.println(employee.getFirstName() + " " + employee.getLastName() + " has a reporting line which is too long by " + (depth - 4));
+    public void analyzeReportingLine(Employee employee, int depth, StringBuilder reportingLineMsg) {
+        if (depth > REPORTING_LINE_THRESHOLD) {
+            reportingLineMsg.append(LONG_REPORTING_LINE_MSG.formatted(employee.getFirstName(), employee.getLastName(), (depth - REPORTING_LINE_THRESHOLD))).append(lineSeparator());
         }
-
         for (Employee subordinate : employee.getSubordinates()) {
-            analyzeReportingLine(subordinate, depth + 1);
+            analyzeReportingLine(subordinate, depth + 1, reportingLineMsg);
         }
     }
 }
