@@ -11,9 +11,25 @@ import static java.lang.System.lineSeparator;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * Implementation of the {@link EmployeeInfoAnalyzerService} interface.
+ * <p>
+ * This class provides logic to:
+ * <ul>
+ *     <li>Create employee hierarchies</li>
+ *     <li>Calculate average salaries of direct subordinates</li>
+ *     <li>Analyze salary disparities between managers and subordinates</li>
+ *     <li>Analyze long reporting lines exceeding a threshold depth</li>
+ * </ul>
+ */
 public class EmployeeInfoAnalyzerServiceImpl implements EmployeeInfoAnalyzerService {
 
-    // Calculating the average salaries of direct subordinates here
+    /**
+     * Recursively calculates and stores the average salary of direct subordinates for each employee.
+     *
+     * @param employee        The current employee being analyzed
+     * @param averageSalaries A map to store the average salary of each employee's direct subordinates
+     */
     private static void calculateAverageSalaries(Employee employee, Map<Integer, Double> averageSalaries) {
         List<Employee> subordinates = employee.getSubordinates();
         if (subordinates.isEmpty()) {
@@ -26,11 +42,18 @@ public class EmployeeInfoAnalyzerServiceImpl implements EmployeeInfoAnalyzerServ
         }
     }
 
+    /**
+     * Builds the organizational hierarchy from a flat list of employees.
+     * <p>
+     * The employee without a manager is considered the root (typically the CEO).
+     *
+     * @param employees A list of employees
+     * @return The root employee of the hierarchy
+     */
     @Override
     public Employee createEmployeeHierarchy(List<Employee> employees) {
         Employee employeeHierarchy = null;
         Map<Integer, Employee> employeesMapping = employees.stream().collect(toMap(e -> e.getId(), e -> e));
-        // Updating employees with their subordinates
         for (Employee employee : employeesMapping.values()) {
             Integer managerId = employee.getManagerId();
             if (isNull(managerId)) {
@@ -43,6 +66,12 @@ public class EmployeeInfoAnalyzerServiceImpl implements EmployeeInfoAnalyzerServ
         return employeeHierarchy;
     }
 
+    /**
+     * Creates a map containing the average salary of each employee's direct subordinates.
+     *
+     * @param ceo The root of the organizational hierarchy (typically the CEO)
+     * @return A map of employee IDs to the average salary of their direct subordinates
+     */
     @Override
     public Map<Integer, Double> creatingDirectSubordinatesAvgSalariesMapping(Employee ceo) {
         Map<Integer, Double> averageSalariesMapping = new HashMap<>();
@@ -51,6 +80,14 @@ public class EmployeeInfoAnalyzerServiceImpl implements EmployeeInfoAnalyzerServ
         return averageSalariesMapping;
     }
 
+    /**
+     * Analyzes whether an employee's salary is significantly below or above the average of their subordinates,
+     * and appends appropriate messages to the report.
+     *
+     * @param employee                The employee being analyzed
+     * @param subordinatesAvgSalaries A map of employee IDs to average subordinate salaries
+     * @param msg                     A StringBuilder to append salary analysis messages
+     */
     @Override
     public void analyzeSalaries(Employee employee, Map<Integer, Double> subordinatesAvgSalaries, StringBuilder msg) {
         int id = employee.getId();
@@ -77,6 +114,15 @@ public class EmployeeInfoAnalyzerServiceImpl implements EmployeeInfoAnalyzerServ
         }
     }
 
+    /**
+     * Recursively analyzes the reporting line depth of each employee in the hierarchy.
+     * <p>
+     * If the reporting line depth exceeds the configured threshold, a message is added to the report.
+     *
+     * @param employee         The current employee in the hierarchy
+     * @param depth            The current depth of the reporting chain
+     * @param reportingLineMsg A StringBuilder to append reporting line messages
+     */
     @Override
     public void analyzeReportingLine(Employee employee, int depth, StringBuilder reportingLineMsg) {
         String firstName = employee.getFirstName();

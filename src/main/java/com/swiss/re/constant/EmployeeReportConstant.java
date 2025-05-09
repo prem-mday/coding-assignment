@@ -1,5 +1,8 @@
 package com.swiss.re.constant;
 
+/**
+ * This class is added to maintain all the constants needed for EmployeeReportGeneratorApp.
+ */
 public final class EmployeeReportConstant {
     public static final String EMPLOYEE_INFO_CSV_FILE_PATH = "./src/main/resources/employee-info.csv";
     public static final String SALARY_VARIATION_MSG = "Manager: %s %s, earns %s than he should, and by: %,.2f.";
