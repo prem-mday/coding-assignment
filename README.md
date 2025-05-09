@@ -10,7 +10,7 @@ then performs analysis on salaries and reporting lines.
   last name, salary, and manager ID.
 - **Hierarchy Creation**: The application constructs an employee hierarchy based on the manager-subordinate
   relationships.
-- **Salary Analysis**: The application identifies salary discrepancies based on subordinates' average salaries.
+- **Salary Analysis**: The application identifies salary discrepancies based on the direct subordinates' average salaries.
 - **Reporting Line Analysis**: The application identifies reporting lines that exceed the organizational depth
   threshold.
 - **Console Output**: The final report is printed to the console.
