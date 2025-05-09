@@ -29,13 +29,7 @@ class EmployeeReportGeneratorServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // Injecting mocks manually since original class creates new instances (can refactor that later)
-        reportGenerator = new EmployeeReportGeneratorServiceImpl() {
-            {
-                this.empInfoReaderSvc = empInfoReaderSvc;
-                this.empInfoAnalyzerSvc = empInfoAnalyzerSvc;
-            }
-        };
+        reportGenerator = new EmployeeReportGeneratorServiceImpl();
     }
 
     @Test

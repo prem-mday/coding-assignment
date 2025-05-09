@@ -8,8 +8,8 @@ import java.util.Map;
 import static com.swiss.re.constant.EmployeeReportConstant.*;
 
 public class EmployeeReportGeneratorServiceImpl implements EmployeeReportGeneratorService {
-    EmployeeInfoReaderService empInfoReaderSvc = new EmployeeInfoCSVReaderServiceImpl();
-    EmployeeInfoAnalyzerService empInfoAnalyzerSvc = new EmployeeInfoAnalyzerServiceImpl();
+    private EmployeeInfoReaderService empInfoReaderSvc = new EmployeeInfoCSVReaderServiceImpl();
+    private EmployeeInfoAnalyzerService empInfoAnalyzerSvc = new EmployeeInfoAnalyzerServiceImpl();
 
     @Override
     public void generateEmployeeInformationReport() {
