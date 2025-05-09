@@ -53,26 +53,37 @@ public class EmployeeInfoAnalyzerServiceImpl implements EmployeeInfoAnalyzerServ
 
     @Override
     public void analyzeSalaries(Employee employee, Map<Integer, Double> subordinatesAvgSalaries, StringBuilder msg) {
-        if (employee.getSubordinates().isEmpty()) {
+        int id = employee.getId();
+        String firstName = employee.getFirstName();
+        String lastName = employee.getLastName();
+        double salary = employee.getSalary();
+        List<Employee> subordinates = employee.getSubordinates();
+
+        if (subordinates.isEmpty()) {
             return;
         }
-        double averageSalary = subordinatesAvgSalaries.get(employee.getId());
+        double averageSalary = subordinatesAvgSalaries.get(id);
         double minSalary = averageSalary * 1.2;
         double maxSalary = averageSalary * 1.5;
-        if (employee.getSalary() < minSalary) {
-            msg.append(SALARY_VARIATION_MSG.formatted(employee.getFirstName(), employee.getLastName(), SALARY_LESS, (minSalary - employee.getSalary()))).append(lineSeparator());
-        } else if (employee.getSalary() > maxSalary) {
-            msg.append(SALARY_VARIATION_MSG.formatted(employee.getFirstName(), employee.getLastName(), SALARY_MORE, (employee.getSalary() - maxSalary))).append(lineSeparator());
+        if (salary < minSalary) {
+            msg.append(SALARY_VARIATION_MSG.formatted(firstName, lastName, SALARY_LESS, (minSalary - salary)))
+                    .append(lineSeparator());
+        } else if (salary > maxSalary) {
+            msg.append(SALARY_VARIATION_MSG.formatted(firstName, lastName, SALARY_MORE, (salary - maxSalary)))
+                    .append(lineSeparator());
         }
-        for (Employee subordinate : employee.getSubordinates()) {
+        for (Employee subordinate : subordinates) {
             analyzeSalaries(subordinate, subordinatesAvgSalaries, msg);
         }
     }
 
     @Override
     public void analyzeReportingLine(Employee employee, int depth, StringBuilder reportingLineMsg) {
+        String firstName = employee.getFirstName();
+        String lastName = employee.getLastName();
         if (depth > REPORTING_LINE_THRESHOLD) {
-            reportingLineMsg.append(LONG_REPORTING_LINE_MSG.formatted(employee.getFirstName(), employee.getLastName(), (depth - REPORTING_LINE_THRESHOLD))).append(lineSeparator());
+            reportingLineMsg.append(LONG_REPORTING_LINE_MSG
+                    .formatted(firstName, lastName, (depth - REPORTING_LINE_THRESHOLD))).append(lineSeparator());
         }
         for (Employee subordinate : employee.getSubordinates()) {
             analyzeReportingLine(subordinate, depth + 1, reportingLineMsg);
